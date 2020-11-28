@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from numpy import arange
 from src.linguistic_var import LinguisticVar
 from src.membership_functions import create_bell, create_s, create_gamma, create_triangular
@@ -7,7 +8,8 @@ from src.utils import plot_fuzzy_set
 
 
 PARTICIPANTES = ["Nico", "Josy", "Terre", "Flo"]
-PUNTUACIONES = [[8, 9, 7], [7, 7, 8], [6, 6, 5], [6, 4, 5]]
+PUNTUACIONES = [[8, 9, 8], [7, 7, 8], [6, 6.6, 5], [6, 4.5, 4.8]]
+
 
 if __name__ == '__main__':
     prod_quality = LinguisticVar("Producto"
@@ -37,7 +39,7 @@ if __name__ == '__main__':
                         (cook_quality.excelente & plating_quality.excelente) >> valoration.excelente
 
     masterchef_judge += (cook_quality, plating_quality), (valoration, ), \
-                        (cook_quality.excelente & plating_quality.bueno) >> valoration.buena
+                        (cook_quality.excelente & plating_quality.malo) >> valoration.buena
     
     masterchef_judge += (cook_quality, ), (valoration, ), \
                         cook_quality.mala >> valoration.mala
@@ -45,8 +47,8 @@ if __name__ == '__main__':
     masterchef_judge += (prod_quality, cook_quality, plating_quality), (valoration, ), \
                         (prod_quality.excelente & cook_quality.buena & plating_quality.excelente) >> valoration.excelente
     
-    masterchef_judge += (prod_quality, cook_quality, plating_quality), (valoration, ), \
-                        (prod_quality.buena & cook_quality.buena & plating_quality.malo) >> valoration.mala
+    masterchef_judge += (cook_quality, plating_quality), (valoration, ), \
+                        (cook_quality.buena & plating_quality.malo) >> valoration.mala
 
     masterchef_judge += (prod_quality, cook_quality, plating_quality), (valoration, ), \
                         (prod_quality.buena & cook_quality.excelente & plating_quality.malo) >> valoration.buena
@@ -54,13 +56,12 @@ if __name__ == '__main__':
     masterchef_judge += (cook_quality, plating_quality), (valoration, ), \
                         (cook_quality.buena & plating_quality.bueno) >> valoration.buena
 
-    masterchef_judge += (cook_quality, plating_quality), (valoration, ), \
-                        (cook_quality.buena & plating_quality.excelente) >> valoration.buena
 
     maxi = 0
     winner = 0
     for i, scores in enumerate(PUNTUACIONES):
-        val = mom(masterchef_judge.inference(*scores)[valoration])
+        val = round(mom(masterchef_judge.inference(*scores)[valoration]), 1)
+        print(f"{PARTICIPANTES[i]} obtiene: {val} puntos.")
         if val > maxi:
             winner = i
             maxi = val

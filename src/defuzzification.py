@@ -54,22 +54,3 @@ def boa(f_set):
         if inter1 > inter2:
             dist /= 2
             continue
-
-
-class E:
-    def __init__(self):
-        pass
-    
-    def __call__(self, value):
-        return c(value)
-    
-    def domain(self):
-        return arange(0, 7, 0.1)
-
-def c(value):
-    if value < 3:
-        return 0
-    if value <= 6:
-        return 3
-    return 0
-    
